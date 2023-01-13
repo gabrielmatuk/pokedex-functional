@@ -1,3 +1,7 @@
+*{
+    box-sizing: border-box;
+}
+
 body {
     background-color: #FAFAFA;
     margin: 0;
@@ -12,14 +16,19 @@ body {
     height: 35rem;
     background-color: rgb(116,203,72);
     border-radius: 8px;
+    padding: 0.3rem 
 }
 
 #top{
     height: 40%;
+    padding: 0.5rem;
+    background: url('../img/pokeball.png');
+    background-repeat: no-repeat;
+    background-position: right;
 }
 
 #data{
     background-color: white;
     height: 60%;
-
+    border-radius: 8px;
 }
