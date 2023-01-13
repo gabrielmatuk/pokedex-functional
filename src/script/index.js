@@ -62,7 +62,7 @@ search.addEventListener("change", async (event) => {
   const data = await fetchApi(event.target.value);
 
   if (!data) {
-    alert("Pokémon does not exist.");
+    alert(`Pokémon dosn't exist!`);
     return;
   }
   const mainColor = typeColors[data.types[0].type.name];
@@ -114,9 +114,13 @@ const checkToggle = () => {
     let jsonStorage = JSON.parse(storage);
 
     if (storage != "empty_value" && switchShiny.checked) {
-      pokemonImage.src = jsonStorage.sprites.other.home.front_shiny;
+      pokemonImage.src = jsonStorage.sprites.other.home.front_shiny
+        ? jsonStorage.sprites.other.home.front_shiny
+        : alert(`This pokemon it's a Shiny Lock`);
     } else {
-      pokemonImage.src = jsonStorage.sprites.other.home.front_default;
+      pokemonImage.src = jsonStorage.sprites.other.home.front_default
+        ? jsonStorage.sprites.other.home.front_default
+        : alert(`This pokemon it's a Shiny Lock`);
     }
   }
 };
