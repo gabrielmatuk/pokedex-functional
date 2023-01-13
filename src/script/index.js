@@ -62,7 +62,7 @@ search.addEventListener("change", async (event) => {
   const data = await fetchApi(event.target.value);
 
   if (!data) {
-    alert(`Pokémon dosn't exist!`);
+    alert(`Pokémon doesn't exist!`);
     return;
   }
   const mainColor = typeColors[data.types[0].type.name];
@@ -99,6 +99,7 @@ search.addEventListener("change", async (event) => {
       i
     ].style.color = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
   });
+  checkToggle();
 });
 
 const checkToggle = () => {
