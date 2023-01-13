@@ -1,4 +1,4 @@
-const search = document.querySelector("#search"); //TO-DO BUTTON AND LABEL - SHINY TYPE
+const search = document.querySelector("#search"); //TO-DO BUTTON AND LABEL - SHINY TYPE // BOTAR LOADER - TRAVAR O BOTÃO PARA
 const number = document.querySelector("#number");
 const pokemonImage = document.querySelector("#pokemon-image");
 const type = document.querySelectorAll(".type");
@@ -10,6 +10,7 @@ const statDesc = document.querySelectorAll(".stat-desc");
 const baseStats = document.querySelector("#base-stats");
 const pokedex = document.querySelector("#pokedex");
 const switchShiny = document.querySelector("#switch-shiny");
+const loader = document.querySelector(".loader");
 
 if (window.performance) {
   console.log("Perfomance works well.");
@@ -39,28 +40,39 @@ const typeColors = {
   dragon: [112, 55, 255],
 };
 
+const TIMEOUT_PROMISE = 800;
+
 const URL_BULBASAUR_SHINY =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/1.png";
 const URL_BULBASAUR_NORMAL =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/1.png";
 
 const fetchApi = async (name) => {
-  let pokName = name.toLowerCase();
-  pokName = pokName.split(" ").join("-");
-  const url = `https://pokeapi.co/api/v2/pokemon/${pokName}`;
-  const res = await fetch(url);
-  if (res.status === 200) {
-    const pokeData = await res.json();
-    localStorage.setItem("last_poke", JSON.stringify(pokeData));
-    return pokeData;
-  }
+  return new Promise(async (resolve, reject) => {
+    let pokName = name.toLowerCase();
+    pokName = pokName.split(" ").join("-");
+    const url = `https://pokeapi.co/api/v2/pokemon/${pokName}`;
+    loader.hidden = false;
+    pokedex.style.filter = `blur(3px)`;
+    search.disabled = true;
+    setTimeout(async () => {
+      const res = await fetch(url);
+      loader.hidden = true;
+      pokedex.style.filter = "";
+      search.disabled = false;
 
-  return false;
+      if (res.status === 200) {
+        const pokeData = await res.json();
+        localStorage.setItem("last_poke", JSON.stringify(pokeData));
+        resolve(pokeData);
+      }
+      reject(false);
+    }, TIMEOUT_PROMISE);
+  });
 };
 
 search.addEventListener("change", async (event) => {
   const data = await fetchApi(event.target.value);
-
   if (!data) {
     alert(`Pokémon doesn't exist!`);
     return;
