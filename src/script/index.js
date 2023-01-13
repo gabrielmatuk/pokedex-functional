@@ -9,6 +9,14 @@ const barOuter = document.querySelectorAll(".bar-outer");
 const statDesc = document.querySelectorAll(".stat-desc");
 const baseStats = document.querySelector("#base-stats");
 const pokedex = document.querySelector("#pokedex");
+const switchShiny = document.querySelector("#switch-shiny");
+
+if (window.performance) {
+  console.log("Perfomance works well.");
+  if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+    localStorage.setItem("last_poke", "empty_value");
+  }
+}
 
 const typeColors = {
   rock: [182, 158, 49],
@@ -31,14 +39,20 @@ const typeColors = {
   dragon: [112, 55, 255],
 };
 
+const URL_BULBASAUR_SHINY =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/1.png";
+const URL_BULBASAUR_NORMAL =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/1.png";
+
 const fetchApi = async (name) => {
   let pokName = name.toLowerCase();
   pokName = pokName.split(" ").join("-");
   const url = `https://pokeapi.co/api/v2/pokemon/${pokName}`;
   const res = await fetch(url);
-
   if (res.status === 200) {
-    return await res.json();
+    const pokeData = await res.json();
+    localStorage.setItem("last_poke", JSON.stringify(pokeData));
+    return pokeData;
   }
 
   return false;
@@ -51,7 +65,6 @@ search.addEventListener("change", async (event) => {
     alert("Pokémon does not exist.");
     return;
   }
-
   const mainColor = typeColors[data.types[0].type.name];
   baseStats.style.color = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
   pokedex.style.backgroundColor = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
@@ -87,3 +100,23 @@ search.addEventListener("change", async (event) => {
     ].style.color = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
   });
 });
+
+const checkToggle = () => {
+  let storage = localStorage.getItem("last_poke");
+  if (storage == "empty_value") {
+    if (switchShiny.checked) {
+      pokemonImage.src = URL_BULBASAUR_SHINY;
+    } else {
+      pokemonImage.src = URL_BULBASAUR_NORMAL;
+    }
+  }
+  if (storage != "empty_value") {
+    let jsonStorage = JSON.parse(storage);
+
+    if (storage != "empty_value" && switchShiny.checked) {
+      pokemonImage.src = jsonStorage.sprites.other.home.front_shiny;
+    } else {
+      pokemonImage.src = jsonStorage.sprites.other.home.front_default;
+    }
+  }
+};
