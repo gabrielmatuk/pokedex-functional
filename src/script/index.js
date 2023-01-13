@@ -72,46 +72,47 @@ const fetchApi = async (name) => {
 };
 
 search.addEventListener("change", async (event) => {
-  const data = await fetchApi(event.target.value);
-  if (!data) {
+  try {
+    const data = await fetchApi(event.target.value);
+    // return pokemonError;
+    const mainColor = typeColors[data.types[0].type.name];
+    baseStats.style.color = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
+    pokedex.style.backgroundColor = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
+    number.innerHTML = `#${data.id.toString().padStart(3, "0")}`;
+    pokemonImage.src = data.sprites.other.home.front_default;
+
+    types.innerHTML = "";
+    data.types.forEach((t) => {
+      let newType = document.createElement("span");
+      let colors = typeColors[t.type.name];
+
+      newType.innerHTML = t.type.name;
+      newType.classList.add("type");
+      newType.style.backgroundColor = `rgb(${colors[0]}, ${colors[1]}, ${colors[2]})`;
+
+      types.appendChild(newType);
+    });
+    data.stats.forEach((s, i) => {
+      statNumber[i].innerHTML = s.base_stat.toString().padStart(3, "0");
+
+      barInner[i].style.width = `${s.base_stat}%`;
+
+      barInner[
+        i
+      ].style.backgroundColor = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
+
+      barOuter[
+        i
+      ].style.backgroundColor = `rgba(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]}, 0.3)`;
+
+      statDesc[
+        i
+      ].style.color = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
+    });
+    checkToggle();
+  } catch (e) {
     alert(`Pokémon doesn't exist!`);
-    return;
   }
-  const mainColor = typeColors[data.types[0].type.name];
-  baseStats.style.color = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
-  pokedex.style.backgroundColor = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
-  number.innerHTML = `#${data.id.toString().padStart(3, "0")}`;
-  pokemonImage.src = data.sprites.other.home.front_default;
-
-  types.innerHTML = "";
-  data.types.forEach((t) => {
-    let newType = document.createElement("span");
-    let colors = typeColors[t.type.name];
-
-    newType.innerHTML = t.type.name;
-    newType.classList.add("type");
-    newType.style.backgroundColor = `rgb(${colors[0]}, ${colors[1]}, ${colors[2]})`;
-
-    types.appendChild(newType);
-  });
-  data.stats.forEach((s, i) => {
-    statNumber[i].innerHTML = s.base_stat.toString().padStart(3, "0");
-
-    barInner[i].style.width = `${s.base_stat}%`;
-
-    barInner[
-      i
-    ].style.backgroundColor = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
-
-    barOuter[
-      i
-    ].style.backgroundColor = `rgba(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]}, 0.3)`;
-
-    statDesc[
-      i
-    ].style.color = `rgb(${mainColor[0]}, ${mainColor[1]}, ${mainColor[2]})`;
-  });
-  checkToggle();
 });
 
 const checkToggle = () => {
