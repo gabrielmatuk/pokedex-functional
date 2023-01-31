@@ -15,7 +15,7 @@ const loader = document.querySelector(".loader");
 if (window.performance) {
   console.log("Perfomance works well.");
   if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
-    localStorage.setItem("last_poke", "empty_value");
+    sessionStorage.setItem("last_poke", "empty_value");
   }
 }
 
@@ -63,7 +63,7 @@ const fetchApi = async (name) => {
 
       if (res.status === 200) {
         const pokeData = await res.json();
-        localStorage.setItem("last_poke", JSON.stringify(pokeData));
+        sessionStorage.setItem("last_poke", JSON.stringify(pokeData));
         resolve(pokeData);
       }
       reject(false);
@@ -116,7 +116,8 @@ search.addEventListener("change", async (event) => {
 });
 
 const checkToggle = () => {
-  let storage = localStorage.getItem("last_poke");
+  let storage = sessionStorage.getItem("last_poke");
+  console.log(sessionStorage);
   if (storage == "empty_value") {
     if (switchShiny.checked) {
       pokemonImage.src = URL_BULBASAUR_SHINY;

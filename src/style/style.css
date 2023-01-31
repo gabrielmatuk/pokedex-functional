@@ -55,7 +55,9 @@ body {
 
 #search {
   color: white;
-  background: none;
+  /* background: none; */
+  background: 
+  linear-gradient(#000, #000) center bottom 5px /calc(100% - 10px) 1px no-repeat;
   border: none;
   font-size: 1.2rem;
   font-weight: bold;
